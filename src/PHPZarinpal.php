@@ -3,10 +3,10 @@ namespace ffb343;
 class PHPZarinpal {
 	private $APIEndpoint = "https://www.zarinpal.com/pg/rest/WebGate/";
 	private $gateEndpoint = "https://www.zarinpal.com/pg/StartPay/";
-	private $merchantID;
-	private $callbackURL;
-	private $amount;
-	private $description;
+	private $merchantID = null;
+	private $callbackURL = null;
+	private $amount = null;
+	private $description = null;
 	private $email = null;
 	private $mobile = null;
 	public $additionalData = [];
@@ -25,6 +25,9 @@ class PHPZarinpal {
 			$this->APIEndpoint = "https://sandbox.zarinpal.com/pg/rest/WebGate/";
 			$this->gateEndpoint = "https://sandbox.zarinpal.com/pg/StartPay/";
 			$this->isSandBox = true;
+		}
+		if (!isset($merchantID)) {
+			throw new PZE("merchantID can not be empty", 1);
 		}
 		$this->merchantID = $merchantID;
 	}
@@ -50,6 +53,7 @@ class PHPZarinpal {
 		$result = json_decode($result, true);
 		curl_close($ch);
 		if ($err) {
+			throw new PZE("cURL ERR:" . $err, 1);
 			return "cURL ERR:" . $err;
 		} else {
 			return $result;
@@ -75,7 +79,7 @@ class PHPZarinpal {
 			'-2' => 'Merchant ID or Acceptor IP is not correct',
 			'-3' => 'Amount should be above 100 Toman',
 			'-4' => 'Approved level of Acceptor is Lower than the silver',
-			'-11' => 'Request Not found',
+			'-11' => 'Bad Request',
 			'-21' => 'Financial operations for this transaction was not found',
 			'-22' => 'Transaction is unsuccessful',
 			'-33' => 'Transaction amount does not match the amount paid',
@@ -99,7 +103,7 @@ class PHPZarinpal {
 			$this->callbackURL = $url;
 			return true;
 		} else {
-			return false;
+			throw new PZE("CallBack URL should be a valud URL", 1);
 		}
 	}
 
@@ -213,6 +217,17 @@ class PHPZarinpal {
 	 * @return string Authority key or an error message if there is some errors (should store in a safe 460606)
 	 */
 	public function getAuthority() {
+		if (!isset($this->amount)) {
+			throw new PZE("You should enter a valid Amount", 1);
+		}
+
+		if (!isset($this->callbackURL)) {
+			throw new PZE("You should enter a valid CallBack URL", 1);
+		}
+
+		if (!isset($this->description)) {
+			throw new PZE("You should enter a valid Description", 1);
+		}
 		$method = 'PaymentRequest';
 		$data = [
 			'MerchantID' => $this->merchantID,
@@ -220,6 +235,14 @@ class PHPZarinpal {
 			'CallbackURL' => $this->callbackURL,
 			'Description' => $this->description,
 		];
+		if (isset($this->email)) {
+			$data['Email'] = $this->email;
+		}
+
+		if (isset($this->email)) {
+			$data['Mobile'] = $this->mobile;
+		}
+
 		if (!empty($this->additionalData)) {
 			$jsonEncodedAdditionalData = json_encode($this->additionalData);
 			$additionalDataArray = [
@@ -233,6 +256,7 @@ class PHPZarinpal {
 			$this->authority = $result["Authority"];
 			return $result["Authority"];
 		} else {
+			throw new PZE($result["Status"] . " " . $this->getResultMessage($result["Status"]), 1);
 			return 'ERR: ' . $result["Status"] . ' ' . $this->getResultMessage($result["Status"]);
 		}
 	}
@@ -284,7 +308,11 @@ class PHPZarinpal {
 		];
 		$gatewayURL = $this->gateEndpoint . '' . $this->authority . '/' . $allowedMethod[$method];
 		$this->gatewayURL = $gatewayURL;
-		return isset($allowedMethod[$method]) ? ($this->gatewayURL) : ("Err: $method not found");
+		if (isset($allowedMethod[$method])) {
+			return $this->gatewayURL;
+		} else {
+			throw new PZE("'$method' Not found", 1);
+		}
 	}
 
 	/**
@@ -298,3 +326,5 @@ class PHPZarinpal {
 	}
 
 }
+
+class PZE extends \Exception {}
