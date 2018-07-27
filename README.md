@@ -15,15 +15,15 @@ It's even easier than drinking a cup of coffe!
 ### Request Authority:
 ```php
 require_once("src/PHPZarinpal.php");
-$zp = new ffb343\PHPZarinpal('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'); // Just pass you Merchant ID
+$zp = new ffb343\PHPZarinpal('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'); // Just pass your Merchant ID
 
 $zp->setCallbackURL("http://ffb343.github.io/PHPZarinpal/example/verify.php"); //Requerd
-//The address the user should be directed to after payment. For example your verify.php file
+//The address that user should be directed to after payment. For example your verify.php file
 
 $zp->setAmount("5500"); //Requerd
 //Amount to be paid by the user based on IRI Tooman
 
-$zp->setDescription("Testing Trans"); //Optionalal
+$zp->setDescription("Testing Trans"); //Requerd
 //Transaction description
 
 $zp->setEmail("test@example.io"); //Optionalal
@@ -80,17 +80,17 @@ If you want, you can also use below methods (Special features)
 This method is suitable for those sellers whose benefit from entered price must be distributed in a special way. For example you own a web site that presents ceremony services and you have some contributions with several contractors. In this way you would keep some money and settle the rest of it to the contractors' account.
 ```php
 $zp->sharedPay([
-	'zp1.1' => [
+	'zp.1.1' => [
 		'amount' => '1200',
 		'description' => 'Testing Profit Partnership',
 	],
-	'zp45.86' => [
+	'zp.4555.3' => [
 		'amount' => '5500',
 		'description' => 'Testing Tax',
 	],
 ]);
 ```
-The line above means that if the transaction was successful amount of 1200 Toman from the main transaction is sent to 1st account (zp1.1) and amount of 5500 Toman is sent to 2nd account number (zp45.86) and all the procedure is explained and saved.
+The line above means that if the transaction was successful amount of 1200 Toman from the main transaction is sent to 1st account (zp.1.1) and amount of 5500 Toman is sent to 2nd account (zp.4555.3) and all the procedure is explained and saved.
 ### Create Authority with Long Lifetime
 ```php
 $zp->setExpireIn('1800'); //Set expire time (in second)
@@ -114,7 +114,7 @@ $zp = new ffb343\PHPZarinpal('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx','sandbox');
 ```
 ### Using ZarinGate, MobileGate
 These two special services are used to personalize the payment URL.
-For example, ZarinGate, redirects the user directly to the payment page without intermediary.
+For example, ZarinGate, redirects user directly to the payment page without intermediary.
 in ```getPaymentURL()``` Just pass ``zaringate`` to use ZarinGate or ``mobilegate`` to use MobileGate or Leave it blank to use Zarinpal's web gate.
 ```php
 $zp->getPaymentURL('zaringate'); //use ZarinGate
