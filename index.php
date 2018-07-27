@@ -1,9 +1,9 @@
 <?php
 require_once 'src/PHPZarinpal.php';
-$zp = new ffb343\PHPZarinpal('xxxxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx');
+$zp = new ffb343\PHPZarinpal("xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
 
 $zp->setCallbackURL("http://ffb343.github.io/PHPZarinpal/verify.php");
-$zp->setAmount("1500");
+$zp->setAmount(2200);
 $zp->setDescription("Testing Trans");
 $zp->setEmail("test@example.io");
 $zp->setMobile("9123456789");
