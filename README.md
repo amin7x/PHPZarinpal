@@ -1,5 +1,5 @@
 # ![logo](https://cdn.pbrd.co/images/HvKaXwC.png) PHPZarinpal 
-This is a PHP wrapper for [Zarinpal's Web API](https://zarinpal.com/). This library will help you to use Zarinpal API in an easy and simple way.
+This is a PHP wrapper for [Zarinpal's Web API](https://zarinpal.com/). This library will help you to use Zarinpal API in an easy and simple زشسث.
 
 ## Requirements
 * PHP 5.4 or later.
