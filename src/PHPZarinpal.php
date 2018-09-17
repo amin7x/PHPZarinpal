@@ -151,7 +151,7 @@ class PHPZarinpal {
 			return false;
 		}
 
-		$this->mobile = $mobile;
+		$this->mobile = $phoneNumber;
 		return true;
 	}
 
